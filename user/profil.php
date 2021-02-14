@@ -5,8 +5,7 @@
 	  	<?php
 	  		$user = new User();
 	  		$id_user = $_SESSION['user'];
-	  		$Msg['foto'] = 'true';
-	  		$Msg['cv'] = 'trus';
+	  		
 	  		if(isset($_POST['submit'])){
 
 	  			$error = array();
@@ -32,10 +31,8 @@
 					$format_cv = array("docx","pdf","doc","DOCX","PDF","DOC");
 					if (!in_array($format_file_cv,$format_cv)) {
 						$error[] = "Format File Tidak Mendukung";
-						$Msg["cv"] = "false";
+						$MsgCv = 'false';
 						
-					}else{
-						$Msg["cv"] = "false";
 					}
 
 					$file = "cv_" . $id_user . "_" . $nama_lengkap . "." . end($explode);
@@ -54,35 +51,36 @@
 					$format = array("jpg","jpeg","png","JPG","JPEG","PNG");
 					if (!in_array($format_file,$format)) {
 						$error[] = "Format File Tidak Mendukung";
-						$Msg["foto"] = "false";
+						$MsgFoto = "false";
 						
 					}else{
-						$Msg["foto"] = "true";
+
+					$file_foto = "foto_" . $id_user . "_" . $nama_lengkap . "." . end($explode);
+					move_uploaded_file($_FILES['file_foto']['tmp_name'], "../upload/" . $file_foto);	
 					}
 					
-					$file_foto = "foto_" . $id_user . "_" . $nama_lengkap . "." . end($explode);
-					move_uploaded_file($_FILES['file_foto']['tmp_name'], "../upload/" . $file_foto);
 				}else{
 
 					$file_foto = $data['foto'];
 				}
 
-	  			$qry = $user->UpdateData($nama_lengkap, $alamat, $tmp_lahir, $tgl_lahir, $no_hp, $email, $pend, $file, $file_foto, $id_user);
-
-	  			if($qry == FALSE){
-	  				$error[]="gagal";
-	  			}
+	  			
+	  			
 
 	  			if(count($error)>0){
-	  				echo "<script language='javascript'>alert('Gagal');document.location='index.php'</script>";
-
 	  				
 	  			}else{
-	  				echo "<script language='javascript'>alert('Berhasil');document.location='index.php'</script>";
+	  				$qry = $user->UpdateData($nama_lengkap, $alamat, $tmp_lahir, $tgl_lahir, $no_hp, $email, $pend, $file, $file_foto, $id_user);
+	  				if($qry == FALSE){
+	  					echo "<script language='javascript'>alert('Gagal');</script>";
+	  				}else{
+	  					echo "<script language='javascript'>alert('Berhasil');</script>";
+	  				}
+	  				
 	  			}
 
 	  		}
-
+	  		
 	  		$get = $user->GetData("where id_user='$id_user'");
 	  		$rowUser = $get->fetch();
 
@@ -104,14 +102,16 @@
 									if($rowUser['foto']!=""){
 										echo "<img src='../upload/$rowUser[foto]' width='250px' height='250px'>";
 									}else{
-										echo "<label>Foto (JGG, JPEG, PNG</label>";
+										echo "<label>Foto (JPG, JPEG, PNG)</label>";
 									}
 								?>
 					  			<center><input type="file" required="" name="file_foto"></center>
-					  			<?php if ($Msg['foto']=='false') { ?>
+					  			<?php
+					  			if (isset($MsgFoto)) { ?>
 					  				<p style="color: red;">*/ This Format Only (JPG, JPEG, PNG)</p>
-					  			
-					  			<?php }  ?>
+					  				
+					  			<?php } ?>
+					  			 
 					  		
 								
 							
@@ -190,11 +190,13 @@
 										echo "<a href='../upload/$rowUser[file_cv]' class='form-control'>$rowUser[file_cv]</a>";
 									}
 								?>
-								<?php if ($Msg['cv']=='false') { ?>
-					  				<p style="color: red;">*/ This Format Only (PDF, DOCX, DOC)</p>
-					  			
-					  			<?php }  ?>
+								
 					  			<center><input type="file" name="file_cv" required=""></center>
+					  			<?php
+					  			if (isset($MsgCv)) { ?>
+					  				<p style="color: red;">*/ This Format Only (PDF, DOC, DOCX)</p>
+					  				
+					  			<?php } ?>
 							</div>
 				  		</div>
 
