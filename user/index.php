@@ -13,6 +13,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- css -->
     <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="../js/datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" media="screen">
     <link href="../css/style.css" rel="stylesheet" media="screen">
 	<link href="../color/default.css" rel="stylesheet" media="screen">
 	<script src="../js/modernizr.custom.js"></script>
@@ -46,9 +47,19 @@
 
 	<!-- js -->
     <script src="../js/jquery.js"></script>
+        <script src="../js/datepicker/js/bootstrap-datepicker.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
 	<script src="../js/jquery.smooth-scroll.min.js"></script>
 	<script src="../js/jquery.dlmenu.js"></script>
 	<script src="../js/wow.min.js"></script>
 	<script src="../js/custom.js"></script>
+	<script type="text/javascript">
+		 $(function(){
+		  $(".datepicker").datepicker({
+		      format: 'yyyy-mm-dd',
+		      autoclose: true,
+		      todayHighlight: true,
+		  });
+		 });
+	</script>
 </html>

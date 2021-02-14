@@ -144,7 +144,7 @@
 				  		<div class="form-group">
 							<div class="col-md-offset-2 col-md-8">
 								<label>Tanggal Lahir (yyyy-mm-dd)</label>
-					  			<input type="text" name="tgl_lahir" required="" class="form-control" id="inputName" placeholder="Tanggal Lahir" <?php echo "value = '$rowUser[tanggal_lahir]'"; ?>>
+					  			<input type="text" name="tgl_lahir" required="" class="form-control datepicker" id="inputName" placeholder="Tanggal Lahir" <?php echo "value = '$rowUser[tanggal_lahir]'"; ?>>
 							</div>
 				  		</div>
 
