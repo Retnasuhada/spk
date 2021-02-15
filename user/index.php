@@ -32,8 +32,31 @@
 					</div><!-- /dl-menuwrapper -->
 	</div>	
 
+<div id="intro">
+	  
+			<div class="intro-text">
+				<div class="container">
+					<div class="row">
+					
+						
+					<div class="col-md-12">
+			
+						<div class="brand">
+							<img src='../img/uui.png'>
+							<h1><a href="index.html">Lowongan Kerja PT. CHINLI PLASTIC TECHNOLOGY INDONESIA<br></a></h1>
+							
+							<p><span>Bergabung bersama kami untuk mendapatkan karir yang lebih baik</span></p>
+							
+						</div>
+					</div>
+					</div>
+				</div>
+		 	</div>
+			
+	 </div>
 	<?php
 		include "page.php";
+
 
 
 	}else{
@@ -42,6 +65,21 @@
 
 	}
 	?>
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<p>Copyright &copy;2021  <a href="http://bootstraptaste.com">PT. CHINLI INDONESIA</a></p>
+				</div>
+                <!-- 
+                    All links in the footer should remain intact. 
+                    Licenseing information is available at: http://bootstraptaste.com/license/
+                    You can buy this theme without footer links online at: http://bootstraptaste.com/buy/?theme=Mamba
+                -->
+			</div>		
+		</div>	
+	</footer>
+	 
 	  
 	</body>
 

@@ -5,6 +5,10 @@
 		if($menu == "pelamar"){
 			include "menu/pelamar.php";
 		}
+		if($menu == "act_laporan"){
+			include "laporan.php";
+		}
+		
 
 		if($menu == "penerimaan"){
 			include "menu/penerimaan.php";
@@ -20,6 +24,9 @@
 
 		if($menu == "perhitungan"){
 			include "menu/perhitungan.php";
+		}
+		if($menu == "laporan"){
+			include "menu/laporan.php";
 		}
 
 	}else{

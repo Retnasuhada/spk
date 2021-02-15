@@ -51,7 +51,7 @@
 						<div class="control-group">
 							<label class="control-label" for="basicinput">Nama File</label>
 							<div class="controls">
-								<input type="text" id="basicinput" name="nama_file" placeholder="Input nama file" class="span8">
+								<input type="text" required="" id="basicinput" name="nama_file" placeholder="Input nama file" class="span8">
 							</div>
 						</div>
 

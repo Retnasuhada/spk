@@ -6,15 +6,42 @@
 	if(isset($_SESSION['user'])){
 		echo "<script language='javascript'> window.location.href='user/index.php'</script>";
 	}
-
+// io
 ?>
-<!DOCTYPE html>
 <html>
   <head>
+ 	
     <title>Lowongan Kerja</title>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- css -->
+    <style type="text/css">
+    	body{
+	font-family: "roboto";
+	background: #F4F4F4;
+}
+
+h1,p{
+	text-align: center;
+}
+
+.kotak{
+	margin: 10px auto;
+	background: #fff;
+	
+	width: 400px;
+	padding: 20px 0px;
+}
+
+.kotak table tr td{
+	padding: 5px;
+}
+
+.kotak table tr td input{
+	padding: 5px;
+	font-size: 12pt;
+}
+    </style>
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/style.css" rel="stylesheet" media="screen">
 	<link href="color/default.css" rel="stylesheet" media="screen">
@@ -428,11 +455,24 @@
 					<div class="form-group">
                         <input type="password" name="password" class="form-control input-lg" placeholder="Password" tabindex="1">
 					</div>
+					<div class="kotak">		
+
+								<table align="center">						
+				<tr>
+					<td>Captcha</td>				
+					<td><img src="captha.php" alt="gambar" /> </td>
+				</tr>
+				<td>Isikan captcha </td>
+				<td><input name="nilaiCaptcha" value=""/></td>
 				
-			</div>
-				<div class="modal-footer">
-					<input type="submit" class="btn btn-primary" value="Login">
+			</table>
 				</div>
+			</div>
+				<div class="modal-footer" align="center">
+					<input type="submit" class="btn btn-primary" value="Login">
+					<p>OR </p><a href="admin/login.php">Login As Admin</a>
+				</div>
+
 			</form>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
@@ -448,19 +488,20 @@
 			<div class="modal-body">
 				<form role="form" method="post" action="register.php">
 					<div class="form-group">
-                        <input type="text" name="nama_lengkap" class="form-control input-lg" placeholder="Nama Lengkap" tabindex="1">
+                        <input type="text" required="" name="nama_lengkap" class="form-control input-lg" placeholder="Nama Lengkap" tabindex="1">
 					</div>
 					<div class="form-group">
-                        <input type="email" name="email" class="form-control input-lg" placeholder="Email" tabindex="1">
+                        <input type="email" name="email" required="" class="form-control input-lg" placeholder="Email" tabindex="1">
 					</div>
 					<div class="form-group">
-                        <input type="text" name="username" class="form-control input-lg" placeholder="Username" tabindex="1">
+                        <input type="text" name="username" required="" class="form-control input-lg" placeholder="Username" tabindex="1">
 					</div>
 					<div class="form-group">
-                        <input type="password" name="password" class="form-control input-lg" placeholder="Password" tabindex="1">
+                        <input type="password" name="password" required="" class="form-control input-lg" placeholder="Password" tabindex="1">
 					</div>
 			</div>
 				<div class="modal-footer">
+					<input type="reset" class="btn btn-warning" value="Cancel">
 					<input type="submit" class="btn btn-primary" value="Register">
 				</div>
 			</form>
@@ -488,7 +529,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-					<p>Copyright &copy;2014 Mamba company. All rights reserved. By <a href="http://bootstraptaste.com">Bootstrap Themes</a></p>
+					<p>Copyright &copy;2021  <a href="http://bootstraptaste.com">PT. CHINLI INDONESIA</a></p>
 				</div>
                 <!-- 
                     All links in the footer should remain intact. 

@@ -34,19 +34,18 @@
 						}
 					}
 				?>
-				<div class="module-body">
-					<form class="form-horizontal row-fluid" action="" method="post">
+				<div class="module-body">					<form class="form-horizontal row-fluid" action="" method="post">
 						<div class="control-group">
 							<label class="control-label" for="basicinput">Penerimaan</label>
 							<div class="controls">
-								<input type="text" id="basicinput" name="penerimaan" placeholder="Penerimaan" class="span8">
+								<input type="text" required="" id="basicinput" name="penerimaan" placeholder="Penerimaan" class="span8">
 							</div>
 						</div>
 
 						<div class="control-group">
 							<label class="control-label" for="basicinput">Kuota</label>
 							<div class="controls">
-								<input type="text" id="basicinput" name="kuota" placeholder="Kuota penerimaan" class="span8">
+								<input type="text" required="" id="basicinput" name="kuota" placeholder="Kuota penerimaan" class="span8">
 							</div>
 						</div>
 

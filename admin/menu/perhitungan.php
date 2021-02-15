@@ -244,6 +244,52 @@ if(!isset($_GET['penerimaan'])){
 		</div>
 		</div>
 
+		<div class="module">
+		<div class="module-head">
+			<h3>Pelamar Terpilih  -- <?php echo $nama_lw['lowongan']; ?></h3>
+		</div>
+		<div class="module-body table">
+			<table cellpadding="0" cellspacing="0" border="0" class="datatable-1 table table-bordered table-striped	 display" 
+			width="100%">
+				<thead>
+					<tr>
+						<th>No.</th>
+						<th>Nama Pelamar</th>
+						<th>No HP</th>
+						<th>E-Mail</th>
+						<!-- <th></th> -->
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+					$jmlBobot = $hitung->NormalisasiBobot($id_lowongan);
+
+					$no = 1;
+					$getData = $lowongan_rinci->GetData("where id_lowongan='$id_lowongan' and bobot > 0 order by kriteria asc");
+					$cek_user = "";
+					$arBB = array();
+					$i=0;
+					while($data = $getData->fetch()){
+						$bobotBaru = round($data['bobot']/$jmlBobot, 4);
+						$arBB[$i] = $bobotBaru;
+						echo "<tr>
+							<td width = 10%>$no</td>
+							<td width = 66%>$data[kriteria]</td>
+							<td width = 12%><center>$data[bobot]</center></td>
+							<td width = 12%><center>$bobotBaru</center></td>";
+							// echo "<td width = 22%> <a class='btn btn-small btn-success' href='?ap=peserta&aksi=detail&id_peserta=$data[id_peserta]'>Detail</a> <a class='btn btn-small btn-danger' href='application/peserta/peserta_hapus.php?id_peserta=$data[id_peserta]&nama_peserta=$data[nama_lengkap]&lomba=$data[nama_lomba]'>Hapus</a> 
+							// <a class='btn btn-small btn-info' href='?ap=peserta&aksi=edit&id_peserta=$data[id_peserta]'>Edit</a>
+						echo "</tr>";
+						$i++;
+						$no++;
+					}
+					//$up = mysql_query("update gtp_peserta set approve = '1' where approve = '0'");
+				?>
+				</tbody>
+			</table>
+		</div>
+		</div>
+
 		<?php
 
 			$loopP = $pelamar->GetData("where id_lowongan='$id_lowongan' and nilai > 0");

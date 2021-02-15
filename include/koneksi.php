@@ -52,6 +52,16 @@
 			}
 		}
 
+		function GetData2($qry_custom){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("select * from lowongan as a join pelamar as b on a.id_lowongan = b.id_lowongan" . $qry_custom);
+				$sql->execute();
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+
 		function InsertData($lowongan, $kuota, $status){
 			try{
 				$this->sqlInsert->bindParam(':lowongan', $lowongan);
@@ -108,6 +118,9 @@
 
 		function __construct(){
 			$this->sqlDataLowongan = $this->bukaKoneksi()->prepare("select * from lowongan_rinci where id_lowongan=:id_lowongan");
+
+			// $this->sqlDataLowongan = $this->bukaKoneksi()->prepare("select * from lowongan where id_lowongan=:id_lowongan");
+
 			$this->sqlInsert = $this->bukaKoneksi()->prepare("insert into lowongan_rinci values ('', :id_lowongan, :kriteria, :bobot, :nilai, :upload)");
 			$this->sqlEdit = $this->bukaKoneksi()->prepare("update lowongan_rinci set kriteria=:kriteria, bobot=:bobot, status_nilai=:nilai, status_upload=:upload where id_lowongan_rinci=:id_lowongan_rinci");
 			$this->sqlHapus = $this->bukaKoneksi()->prepare("delete from lowongan_rinci where id_lowongan_rinci=:id_lowongan_rinci");
@@ -258,6 +271,7 @@
 
 		function __construct(){
 			$this->sqlCekLamaran = $this->bukaKoneksi()->prepare("select * from pelamar where id_user=:id_user and id_lowongan=:id_lowongan");
+			$this->sqlCekLamaranUser = $this->bukaKoneksi()->prepare("select * from pelamar where id_user=:id_user");
 			$this->sqlInsertAwal = $this->bukaKoneksi()->prepare("insert into pelamar (id_user, id_lowongan, kriteria) values (:id_user, :id_lowongan, :kriteria)");
 			$this->sqlUploadBerkas = $this->bukaKoneksi()->prepare("update pelamar set file=:file where id_user=:id_user and id_lowongan=:id_lowongan and kriteria=:kriteria");
 			$this->sqlSetNilai = $this->bukaKoneksi()->prepare("update pelamar set nilai=:nilai where id_user=:id_user and id_lowongan=:id_lowongan and kriteria=:kriteria");
@@ -268,12 +282,14 @@
 			try{
 				$sql = $this->bukaKoneksi()->prepare("select * from pelamar " . $qry_custom);
 				$sql->execute();
+				
 				return $sql;
 			}catch (PDOException $e){
 				print $e->getMessage();
 			}
 		}
 
+		
 		function CekLamaran($id_user, $id_lowongan){
 			try{
 				$this->sqlCekLamaran->bindParam(':id_user', $id_user);

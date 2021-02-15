@@ -43,6 +43,7 @@
                                 <li><a href="?menu=users"><i class="menu-icon icon-key"></i>Users </a></li>
                                 <li><a href="?menu=file"><i class="menu-icon icon-key"></i>File </a></li>
                                 <li><a href="?menu=perhitungan"><i class="menu-icon icon-group"></i>Perhitungan </a></li>
+                                <li><a href="?menu=laporan"><i class="menu-icon icon-group"></i>Laporan </a></li>
                                 <li><a href="logout.php"><i class="menu-icon icon-signout"></i>Logout </a></li>
                             </ul>
                             <!--/.widget-nav-->
