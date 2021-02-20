@@ -178,13 +178,13 @@
 								$catatan =$_POST['status'];	 
 							}
 
-							echo $catatan;
+							// echo $catatan;
 					
 
 							$x++;
 							
 						}
-						die();
+						// die();
 					}
 					 ?>
 					<form action="" method="post" enctype="multipart/form-data">
@@ -260,9 +260,9 @@
 							 	<td colspan="2"><input type="file" name="upload[<?php echo $no ?>]"></td>
 							 <?php } 
 							  if ($row_kriteria['status_upload']==0 AND $row_kriteria['status_nilai']=='0') { ?>
-							 	<!-- <td><input type="radio" id="basicinput" name="status[<?php echo $no; ?>]" value="1"></td>
-								<td><input type="radio" id="basicinput" name="status[<?php echo $no; ?>]" value="0"></td> -->
-								<td colspan="2"><input type="file" name="upload[<?php echo $no ?>]"></td> 	
+							 	<td><input type="radio" id="basicinput" name="status[<?php echo $no; ?>]" value="1"></td>
+								<td><input type="radio" id="basicinput" name="status[<?php echo $no; ?>]" value="0"></td>
+								<!-- <td colspan="2"><input type="file" name="upload[<?php echo $no ?>]"></td> 	 -->
 							 <?php }
 							  if ($row_kriteria['status_upload']==0 AND $row_kriteria['status_nilai']=='1') { ?>
 							 	<td colspan="2" align="left"><input type="teks" placeholder="Masukan nilai" name="nilai[<?php echo $no ?>]"></td>
