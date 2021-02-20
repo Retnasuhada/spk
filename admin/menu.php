@@ -5,13 +5,19 @@
 		if($menu == "pelamar"){
 			include "menu/pelamar.php";
 		}
+		if($menu == "kriteria"){
+			include "menu/kriteria.php";
+		}
 		if($menu == "act_laporan"){
-			include "laporan.php";
+			include "menu/laporan_view.php";
 		}
 		
 
 		if($menu == "penerimaan"){
 			include "menu/penerimaan.php";
+		}
+		if($menu == "laporan_diterima"){
+			include "menu/laporan_diterima.php";
 		}
 
 		if($menu == "users"){

@@ -39,6 +39,8 @@
                                 ?>
                                 <li><a href="?menu=pelamar"><i class="menu-icon icon-envelope"></i>Data Pelamar </a>
                                 </li>
+                                <li><a href="?menu=kriteria"><i class="menu-icon icon-envelope"></i>Data Kriteria </a>
+                                </li>
                                 <li><a href="?menu=penerimaan"><i class="menu-icon icon-inbox"></i>Penerimaan </a></li>
                                 <li><a href="?menu=users"><i class="menu-icon icon-key"></i>Users </a></li>
                                 <li><a href="?menu=file"><i class="menu-icon icon-key"></i>File </a></li>

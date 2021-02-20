@@ -198,24 +198,29 @@
 		$id_lowongan = $_GET['kriteria'];
 		$sql = $lowongan->GetData("where id_lowongan='$id_lowongan'");
 		$pen = $sql->fetch();
-
+		$arr_kriteria = $lowongan_rinci->GetDataKriteria();
 		if(isset($_GET['kriteria_aksi'])){
 
 			if($_GET['kriteria_aksi']=="tambah"){
 				if(isset($_POST['submit'])){
-					$id_penerimaan = $_POST['id_penerimaan'];
-					$kriteria = $_POST['kriteria'];
-					$bobot = $_POST['bobot'];
+					$id_lowongan = $_POST['id_lowongan'];
+					$id_kriteria = $_POST['id_kriteria'];
+					// $bobot = $_POST['bobot'];
 					$nilai = $_POST['nilai'];
 					if($nilai=="0") $bobot = "0";
 					$upload = $_POST['upload'];
 
-					$qry = $lowongan_rinci->InsertData($id_penerimaan, $kriteria, $bobot, $nilai, $upload);
-
-					if($qry){
+					$qry = $lowongan_rinci->InsertLowonganRinci($id_lowongan, $id_kriteria, $nilai, $upload);
+					
+					if($qry!='FALSE'){
 						echo "<script language='javascript'>alert('Data berhasil disimpan'); document.location='?menu=penerimaan&kriteria=$id_lowongan&kriteria_aksi=tambah'</script>";
-					}else{
-						echo "<script language='javacsript'>alert('Gagal'); document.location='?menu=penerimaan&kriteria=$id_lowongan'";
+					}
+					if($qry=='FALSE'){
+						echo "<script language='javascript'>alert('Gagal, Kriteria Sudah Pernah Di Input'); document.location='?menu=penerimaan&kriteria=$id_lowongan&kriteria_aksi=tambah'</script>";
+					}
+					else{
+						// die('disini');
+						echo "<script language='javascript'>alert('Data Gagal Disimpan'); document.location='?menu=penerimaan&kriteria=$id_lowongan&kriteria_aksi=tambah'</script>";
 					}
 				}
 			?>
@@ -223,21 +228,21 @@
 				<div class="module-body">
 					<center><h3>Tambah Kriteria <?php echo $pen['lowongan']; ?></h3></center>
 					<form class="form-horizontal row-fluid" action="" method="post">
+						<input type="hidden" name="id_lowongan" value="<?php echo $id_lowongan; ?>">
 						<div class="control-group">
 							<label class="control-label" for="basicinput">Kriteria</label>
 							<div class="controls">
-								<input type="hidden" name="id_penerimaan" <?php echo "value='$id_lowongan'"; ?>>
-								<input type="text" id="basicinput" name="kriteria" placeholder="Input nama kriteria" class="span8">
+								<select name="id_kriteria">
+									<option value="">-Pilih Kriteria-</option>
+									<?php 
+									while($arr_krit = $arr_kriteria->fetch()){ ?>
+										<option value="<?php echo $arr_krit['id_kriteria'];?>"><?php echo $arr_krit['nama_kriteria']; ?></option>
+									<?php } ?>
+								</select>
 							</div>
+							
 						</div>
-
-						<div class="control-group">
-							<label class="control-label" for="basicinput">Bobot</label>
-							<div class="controls">
-								<input type="text" id="basicinput" name="bobot" placeholder="Input bobot kriteria" class="span8">
-							</div>
-						</div>
-
+						
 						<div class="control-group">
 							<label class="control-label" for="basicinput">Inputan Nilai</label>
 							<div class="controls">
@@ -450,13 +455,13 @@
 
 						echo "<tr>
 							<td width = 7%>$no</td>
-							<td width = 48%>$data[kriteria]</td>
+							<td width = 48%>$data[nama_kriteria]</td>
 							<td width = 10%>$data[bobot]</td>
 							<td width = 10%>$ni</td>
 							<td width = 10%>$up</td>";
 
 						echo "<td width = 15%>
-							<a class='btn btn-small btn-warning' href='?menu=penerimaan&kriteria=$data[id_lowongan]&kriteria_aksi=edit&id_lowongan_rinci=$data[id_lowongan_rinci]'>Edit</a>
+							
 							<a class='btn btn-small btn-danger' href='?menu=penerimaan&kriteria=$data[id_lowongan]&kriteria_aksi=hapus&id_lowongan_rinci=$data[id_lowongan_rinci]'>Hapus</a>
 							</td>";
 						echo "</tr>";

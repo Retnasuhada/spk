@@ -61,6 +61,16 @@
 				print $e->getMessage();
 			}
 		}
+		function InsertDataBaku($id, $nilai, $id_lamaran){
+			
+			try{
+				$sql = $this->bukaKoneksi()->prepare("INSERT INTO tbl_nilai_kriteria(id_kriteria,totalNilai, id_lamaran) values ('$id','$nilai', '$id_lamaran')");
+				$sql->execute();
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
 
 		function InsertData($lowongan, $kuota, $status){
 			try{
@@ -109,6 +119,99 @@
 		}
 	}
 
+class Laporan extends DB{
+		private $sqlInsert;
+		private $sqlEdit;
+		private $sqlHapus;
+		private $sqlUmumkan;
+
+		function __construct(){
+			try{
+				$this->sqlInsert = $this->bukaKoneksi()->prepare("insert into lowongan values ('', :lowongan, :kuota, :status, '0')");
+				$this->sqlHapus = $this->bukaKoneksi()->prepare("delete from lowongan where id_lowongan = :id_lowongan");
+				$this->sqlEdit = $this->bukaKoneksi()->prepare("update lowongan set lowongan=:lowongan, kuota=:kuota, status=:status where id_lowongan=:id_lowongan");
+				$this->sqlUmumkan = $this->bukaKoneksi()->prepare("update lowongan set pengumuman=:pengumuman where id_lowongan=:id_lowongan");
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+
+		function total_pelamar(){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("select b.nama_lengkap, b.pendidikan, c.lowongan from pelamar as a join users as b on a.id_user=b.id_user join lowongan as c on a.id_lowongan = c.id_lowongan");
+				$sql->execute();
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+
+		function jumlah_total_pelamar(){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("select count(*) as jumlah from pelamar as a join users as b on a.id_user=b.id_user join lowongan as c on a.id_lowongan = c.id_lowongan");
+				$sql->execute();
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+
+		function cek_lowongan(){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("SELECT * FROM lowongan");
+				$sql->execute();
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+		
+		function getData($id_lowongan, $kuota){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("SELECT a.id_lamaran,c.vektor_v, d.nama_lengkap,b.lowongan,d.pendidikan FROM pelamar AS a JOIN lowongan AS b ON a.id_lowongan = b.id_lowongan
+														JOIN hitung AS c ON a.id_user = c.id_user AND b.id_lowongan = c.id_lowongan
+														JOIN users AS d ON a.id_user = d.id_user
+														WHERE b.id_lowongan = '$id_lowongan'
+														ORDER BY c.vektor_v DESC
+														LIMIT ".$kuota);
+				$sql->execute();
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+
+		function getDataDitolak($id_lowongan, $kuota){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("SELECT a.id_lamaran,c.vektor_v, d.nama_lengkap,b.lowongan,d.pendidikan FROM pelamar AS a 
+														JOIN lowongan AS b ON a.id_lowongan = b.id_lowongan 
+														JOIN hitung AS c ON a.id_user = c.id_user AND b.id_lowongan = c.id_lowongan 
+														JOIN users AS d ON a.id_user = d.id_user 
+														WHERE a.id_lamaran NOT IN (
+														SELECT T.id_lamaran FROM(
+														SELECT a.id_lamaran FROM pelamar AS a 
+														JOIN lowongan AS b ON a.id_lowongan = b.id_lowongan 
+														JOIN hitung AS c ON a.id_user = c.id_user AND b.id_lowongan = c.id_lowongan 
+														JOIN users AS d ON a.id_user = d.id_user 
+														WHERE b.id_lowongan = '$id_lowongan' 
+														ORDER BY c.vektor_v DESC LIMIT $kuota) AS T) 
+														GROUP BY a.id_lamaran");
+				$sql->execute();
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+		
+		
+
+		
+
+		
+
+		
+	}
+
 	class LowonganRinci extends DB{
 		private $sqlDataLowongan;
 		private $sqlInsert;
@@ -117,11 +220,14 @@
 		private $sqlHapusLamaran;
 
 		function __construct(){
-			$this->sqlDataLowongan = $this->bukaKoneksi()->prepare("select * from lowongan_rinci where id_lowongan=:id_lowongan");
+			$this->sqlDataLowongan = $this->bukaKoneksi()->prepare("select * from lowongan_rinci as a left join tbl_kriteria as b on a.id_kriteria = b.id_kriteria where a.id_lowongan=:id_lowongan");
 
-			// $this->sqlDataLowongan = $this->bukaKoneksi()->prepare("select * from lowongan where id_lowongan=:id_lowongan");
 
-			$this->sqlInsert = $this->bukaKoneksi()->prepare("insert into lowongan_rinci values ('', :id_lowongan, :kriteria, :bobot, :nilai, :upload)");
+			
+			// $this->sqlInsert = $this->bukaKoneksi()->prepare("insert into lowongan_rinci values ('', :id_lowongan, :kriteria, :bobot, :nilai, :upload)");
+
+			$this->sqlInsert2 = $this->bukaKoneksi()->prepare("insert into lowongan_rinci values ('', :id_lowongan, :id_kriteria, :status_nilai, :status_upload)");
+			$this->sqlInsert = $this->bukaKoneksi()->prepare("insert into tbl_kriteria values ('' ,:nama_kriteria, :bobot)");
 			$this->sqlEdit = $this->bukaKoneksi()->prepare("update lowongan_rinci set kriteria=:kriteria, bobot=:bobot, status_nilai=:nilai, status_upload=:upload where id_lowongan_rinci=:id_lowongan_rinci");
 			$this->sqlHapus = $this->bukaKoneksi()->prepare("delete from lowongan_rinci where id_lowongan_rinci=:id_lowongan_rinci");
 			$this->sqlHapusLamaran = $this->bukaKoneksi()->prepare("delete from pelamar where id_lowongan=:id_lowongan and kriteria=:kriteria");
@@ -137,23 +243,64 @@
 			}
 		}
 
-		function InsertData($id_lowongan, $kriteria, $bobot, $nilai, $upload){
+		// function InsertData($id_lowongan, $kriteria, $bobot, $nilai, $upload){
+		// 	try{
+		// 		$this->sqlInsert->bindParam(':id_lowongan', $id_lowongan);
+		// 		$this->sqlInsert->bindParam(':kriteria', $kriteria);
+		// 		$this->sqlInsert->bindParam(':bobot', $bobot);
+		// 		$this->sqlInsert->bindParam(':nilai', $nilai);
+		// 		$this->sqlInsert->bindParam(':upload', $upload);
+		// 		$this->sqlInsert->execute();
+		// 		return $this->sqlInsert;
+		// 	}catch (PDOException $e){
+		// 		print $e->getMessage();
+		// 	}
+		// }
+
+		function InsertData($kriteria, $bobot){
 			try{
-				$this->sqlInsert->bindParam(':id_lowongan', $id_lowongan);
-				$this->sqlInsert->bindParam(':kriteria', $kriteria);
-				$this->sqlInsert->bindParam(':bobot', $bobot);
-				$this->sqlInsert->bindParam(':nilai', $nilai);
-				$this->sqlInsert->bindParam(':upload', $upload);
+				$this->sqlInsert = $this->bukaKoneksi()->prepare("insert into tbl_kriteria(nama_kriteria,bobot) values ('$kriteria', '$bobot')");
 				$this->sqlInsert->execute();
 				return $this->sqlInsert;
 			}catch (PDOException $e){
 				print $e->getMessage();
 			}
+
+
+		}
+		function InsertLowonganRinci($id_lowongan, $id_kriteria, $nilai, $upload){
+			try{
+				$this->cek_data = $this->bukaKoneksi()->prepare("SELECT COUNT(*) as jumlah FROM lowongan_rinci where id_kriteria='$id_kriteria' AND id_lowongan ='$id_lowongan'");
+				$this->cek_data->execute();
+				$ft = $this->cek_data->fetch();
+				$jumlah = $ft['jumlah'];
+				// die($jumlah);
+				if ($jumlah==0) {
+					$this->sqlInsert = $this->bukaKoneksi()->prepare("insert into lowongan_rinci(id_lowongan, id_kriteria,status_nilai,status_upload) values ('$id_lowongan', '$id_kriteria','$nilai','$upload')");
+					$this->sqlInsert->execute();
+					return $this->sqlInsert;
+				}else{
+					$a = 'FALSE';
+					return $a;
+					// echo "<script language='javacsript'>alert('Gagal'); document.location='?menu=penerimaan&kriteria=$id_lowongan'";
+				}
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
 		}
 
+		// function GetDataLowongan($id_lowongan){
+		// 	try{
+		// 		$this->sqlDataLowongan->bindParam(':id_lowongan', $id_lowongan);
+		// 		$this->sqlDataLowongan->execute();
+		// 		return $this->sqlDataLowongan;
+		// 	}catch (PDOException $e){
+		// 		print $e->getMessage();
+		// 	}
+		// }
 		function GetDataLowongan($id_lowongan){
 			try{
-				$this->sqlDataLowongan->bindParam(':id_lowongan', $id_lowongan);
+				$this->sqlDataLowongan = $this->bukaKoneksi()->prepare("SELECT * from tbl_kriteria as a left join lowongan_rinci as b on a.id_kriteria = b.id_kriteria where b.id_lowongan='$id_lowongan'");
 				$this->sqlDataLowongan->execute();
 				return $this->sqlDataLowongan;
 			}catch (PDOException $e){
@@ -161,6 +308,33 @@
 			}
 		}
 
+		function GetDataKriteria(){
+			try{
+				$this->SqlSelectKriteria = $this->bukaKoneksi()->prepare("SELECT * FROM tbl_kriteria");
+				$this->SqlSelectKriteria->execute();
+				return $this->SqlSelectKriteria;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+		function GetDetKriteria($id){
+			try{
+				$this->SqlSelectKriteria = $this->bukaKoneksi()->prepare("SELECT * FROM tbl_kriteria where id_kriteria='$id'");
+				$this->SqlSelectKriteria->execute();
+				return $this->SqlSelectKriteria;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+		function EditKriteria($id_kriteria,$kriteria, $bobot){
+			try{
+				$this->SqlEditKriteria = $this->bukaKoneksi()->prepare("UPDATE tbl_kriteria SET nama_kriteria='$kriteria', bobot='$bobot' WHERE id_kriteria='$id_kriteria'");
+				$this->SqlEditKriteria->execute();
+				return $this->SqlSelectKriteria;
+			}catch (PDOException $e){
+				$e->getMessage();
+			}
+		}
 		function EditData($kriteria, $bobot, $nilai, $upload, $id_lowongan_rinci){
 			try{
 				$this->sqlEdit->bindParam(':kriteria', $kriteria);

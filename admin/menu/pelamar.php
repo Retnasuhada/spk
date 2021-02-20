@@ -132,7 +132,7 @@ if(!isset($_GET['penerimaan'])){
 		?>
 		<div class="module">
 		<div class="module-head">
-			<h3>Data Pelamar -- <?php echo $nama_lw['lowongan']; ?></h3>
+			<h3>Data Pelamar --</h3>
 		</div>
 		<div class="module-body table">
 			<table cellpadding="0" cellspacing="0" border="0" class="datatable-1 table table-bordered table-striped	 display" 
@@ -148,28 +148,10 @@ if(!isset($_GET['penerimaan'])){
 					</tr>
 				</thead>
 				<tbody>
-				<?php
-					$no = 1;
-					$getData = $pelamar->GetData("where id_lowongan='$id_lowongan'");
-					$cek_user = "";
-					while($data = $getData->fetch()){
-						$qrU = $user->GetData("where id_user='$data[id_user]'");
-						$rowU = $qrU->fetch();
-						if ($data['id_user']==$cek_user)
-							continue;
-						echo "<tr>
-							<td width = 10%>$no</td>
-							<td width = 75%><a target='blank' href='index.php?menu=users&detail=$data[id_user]'>$rowU[nama_lengkap]</a></td>";
-						echo "<td width = 15%> <a class='btn btn-small btn-success' href='?menu=pelamar&penerimaan=$id_lowongan&nilai_user=$data[id_user]'>Rincian Nilai</a></td>";
-							// echo "<td width = 22%> <a class='btn btn-small btn-success' href='?ap=peserta&aksi=detail&id_peserta=$data[id_peserta]'>Detail</a> <a class='btn btn-small btn-danger' href='application/peserta/peserta_hapus.php?id_peserta=$data[id_peserta]&nama_peserta=$data[nama_lengkap]&lomba=$data[nama_lomba]'>Hapus</a> 
-							// <a class='btn btn-small btn-info' href='?ap=peserta&aksi=edit&id_peserta=$data[id_peserta]'>Edit</a>
-						echo "</tr>";
-						$cek_user = $data['id_user'];
-
-						$no++;
-					}
-					//$up = mysql_query("update gtp_peserta set approve = '1' where approve = '0'");
-				?>
+				<tr>
+					<td>1</td>
+					<td>retna Suhada</td>
+				</tr>
 				</tbody>
 			</table>
 		</div>
