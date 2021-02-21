@@ -488,6 +488,17 @@ class Laporan extends DB{
 			}
 		}
 
+		function GetData4($qry_custom){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("select * from pelamar as a join users as b on a.id_user = b.id_user join lowongan as c on a.id_lowongan = c.id_lowongan " . $qry_custom);
+				$sql->execute();
+				
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+
 	function GetData3($qry_custom){
 			try{
 				$sql = $this->bukaKoneksi()->prepare("SELECT * FROM pelamar AS a
