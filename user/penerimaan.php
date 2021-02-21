@@ -123,15 +123,18 @@
 						$id_lowongan = $_POST['id_lamaran'];
 						$insert_nilai_baku_pendidikan 	=  $lowongan->InsertDataBaku(1, $nilai_pendidikan, $id_lowongan);
 						$insert_nilai_baku_pengalaman 	=  $lowongan->InsertDataBaku(2, $nilai_pengalaman, $id_lowongan);
-						$insert_nilai_baku_usia 	  	=  $lowongan->InsertDataBaku(3, $nilai_usia, $id_lowongan);
-						$insert_nilai_baku_bahasa  		=  $lowongan->InsertDataBaku(4, $nilai_bahasa, $id_lowongan);
+						$insert_nilai_baku_usia 	  	=  $lowongan->InsertDataBaku(4, $nilai_usia, $id_lowongan);
+						$insert_nilai_baku_bahasa  		=  $lowongan->InsertDataBaku(5, $nilai_bahasa, $id_lowongan);
+						$insert_nilai_baku_kemampuan  	=  $lowongan->InsertDataBaku(3, 0, $id_lowongan);
+
 
 
 						// input data kriteria sesuai kemampuan
 						$jumlah_data = $_POST['jumlah_data'];
 						$x=1;
-						for ($i=0; $i < $jumlah_data ; $i++) { 
-							$id_kriteria = $_POST['id_kriteria'];
+						for ($i=0; $i < $jumlah_data;) { 
+							$id_kriteria = $_POST['id_kriteria'][$i];
+							// print_r($id_kriteria);
 							$nilai = 0;
 							if (isset($_POST['nilai']) AND isset($_FILES['upload'])) {
 
@@ -147,13 +150,13 @@
 									$MsgCv = 'false';
 									
 								}
-								$catatan = $_POST['nilai'].'#'.$name_filename_file;	 
+								$catatan[$i] = $_POST['nilai'].'#'.$name_filename_file;	 
 								$upload[]=move_uploaded_file($_FILES['upload']['tmp_name'][$x], "../upload/" . $name_file);
 							}
 
 							if (isset($_POST['nilai']) AND !isset($_FILES['upload'])) {
 								
-								$catatan = $_POST['nilai'].'#0';	 
+								$catatan[$i] = $_POST['nilai'].'#0';	 
 							}
 							if (!isset($_POST['nilai']) AND isset($_FILES['upload'])) {
 								// die('disini');
@@ -170,21 +173,25 @@
 									$MsgCv = 'false';
 									
 								}
-								$catatan ='0#'.$name_file;	 
+								$catatan[$i] ='0#'.$name_file;	 
 								$upload[]=move_uploaded_file($_FILES['upload']['tmp_name'][$x], "../upload/" . $name_file);
 							}
 							if (!isset($_POST['nilai']) AND !isset($_FILES['upload'])) {		
-								
-								$catatan =$_POST['status'];	 
+								// die('disini');
+								$catatan =$_POST['status'];
+								// print_r($catatan);
+								// die();	 
+
 							}
 
 							// echo $catatan;
-					
+							$input[$i] = $lowongan->InsertDataNilai($id_kriteria, $catatan, $id_lowongan);
 
 							$x++;
+							 $i++;
 							
 						}
-						// die();
+						echo "<script language='javascript'>alert('Data berhasil disimpan'); document.location='?page=penerimaan&lihat'</script>";
 					}
 					 ?>
 					<form action="" method="post" enctype="multipart/form-data">
@@ -247,7 +254,7 @@
 						<tr>
 							
 							<td align="left"><?php echo $no; ?>. <?php echo $row_kriteria['nama_kriteria']; ?></td>
-							<input type="hidden" name="id_kriteria[]" value="<?php echo $row_kriteria['id_kriteria']; ?>">
+							<input type="hidden" name="id_kriteria[<?php echo $no; ?>]" value="<?php echo $row_kriteria['id_kriteria']; ?>">
 							<?php
 							if ($row_kriteria['status_upload']==1 AND $row_kriteria['status_nilai']=='1') { ?>
 								
@@ -282,7 +289,26 @@
 			  </div>
 				  	<?php
 
-				  	}else if(isset($_GET['detail'])){
+				  	}
+
+				if(isset($_GET['lihat'])){
+				  		
+				  		
+				  		
+				  	?>
+				  	<div class="row">
+				  <div class="col-md-offset-2 col-md-8">
+					<div class="section-heading">
+					 <h2>Terimakasih..</h2> 
+					</div>
+					<h4>Lamaran Anda Sedang di Proses Tim Penerimaan Kami, Hasil Akan Di Umumkan Pada tanggal 28 Februari 2021.</h4>
+					<div class="module-body table">
+				  </div>
+			  </div>
+				  	<?php
+
+				  	}
+				  	else if(isset($_GET['detail'])){
 				  		$id_lowongan = $_GET['detail'];
 				  		$getP = $lowongan->GetData("where id_lowongan='$id_lowongan'");
 				  		$pen = $getP->fetch();

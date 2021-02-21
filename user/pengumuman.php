@@ -27,7 +27,7 @@
 
 	  		?>
 	  		 <?php
-                	$get = $hitung->GetData("where id_lowongan='$id_lowongan' order by vektor_v desc limit $kuota");
+                	$get = $hitung->hitungPelamar($id_lowongan,"LIMIT '$kuota'");
                 ?>
 	  		<div class="container">
 			  <div class="row">

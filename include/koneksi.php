@@ -71,6 +71,16 @@
 				print $e->getMessage();
 			}
 		}
+		function InsertDataNilai($id, $nilai, $id_lamaran){
+			
+			try{
+				$sql = $this->bukaKoneksi()->prepare("INSERT INTO tbl_nilai_kriteria(id_kriteria,catatan, id_lamaran) values ('$id','$nilai', '$id_lamaran')");
+				$sql->execute();
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
 
 		function InsertData($lowongan, $kuota, $status){
 			try{
@@ -231,6 +241,21 @@ class Laporan extends DB{
 			$this->sqlEdit = $this->bukaKoneksi()->prepare("update lowongan_rinci set kriteria=:kriteria, bobot=:bobot, status_nilai=:nilai, status_upload=:upload where id_lowongan_rinci=:id_lowongan_rinci");
 			$this->sqlHapus = $this->bukaKoneksi()->prepare("delete from lowongan_rinci where id_lowongan_rinci=:id_lowongan_rinci");
 			$this->sqlHapusLamaran = $this->bukaKoneksi()->prepare("delete from pelamar where id_lowongan=:id_lowongan and kriteria=:kriteria");
+		}
+
+		function GetDataLamaran($qry_custom){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("SELECT a.id_lowongan,e.id_kriteria, a.lowongan, e.nama_kriteria, d.totalNilai, d.catatan FROM lowongan AS a
+														JOIN lowongan_rinci AS b ON a.id_lowongan = b.id_lowongan
+														JOIN pelamar AS c ON a.id_lowongan = c.id_lowongan
+														JOIN tbl_nilai_kriteria AS d ON d.id_lamaran = c.id_lamaran
+														JOIN tbl_kriteria AS e ON e.id_kriteria = d.id_kriteria" . $qry_custom);
+				$sql->execute();
+				
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
 		}
 
 		function GetData($qry_custom){
@@ -463,6 +488,67 @@ class Laporan extends DB{
 			}
 		}
 
+	function GetData3($qry_custom){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("SELECT * FROM pelamar AS a
+														WHERE a.id_lamaran NOT IN (
+														SELECT b.id_lamaran FROM tbl_nilai_detail AS b
+														)");
+				$sql->execute();
+				
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+
+		
+
+
+		function GetDataLamaranUnik($qry_custom){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("SELECT d.id_nilai_kriteria,c.id_lamaran,e.bobot,a.id_lowongan,e.id_kriteria,a.lowongan, e.nama_kriteria,
+													 d.totalNilai, d.catatan, b.status_upload, 
+													 CASE WHEN d.catatan = '1' THEN e.bobot ELSE '0' END AS nilai, b.status_nilai FROM lowongan AS a
+													JOIN lowongan_rinci AS b ON a.id_lowongan = b.id_lowongan
+													JOIN pelamar AS c ON a.id_lowongan = c.id_lowongan
+													JOIN tbl_nilai_kriteria AS d ON d.id_lamaran = c.id_lamaran
+													JOIN tbl_kriteria AS e ON e.id_kriteria = d.id_kriteria " . $qry_custom);
+				$sql->execute();
+				
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+		function GetDataLamaran($qry_custom){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("SELECT d.id_nilai_kriteria,c.id_lamaran,e.bobot,a.id_lowongan,e.id_kriteria, a.lowongan, e.nama_kriteria, d.totalNilai, d.catatan, b.status_upload, b.status_nilai FROM lowongan AS a
+														JOIN lowongan_rinci AS b ON a.id_lowongan = b.id_lowongan
+														JOIN pelamar AS c ON a.id_lowongan = c.id_lowongan
+														JOIN tbl_nilai_kriteria AS d ON d.id_lamaran = c.id_lamaran
+														JOIN tbl_kriteria AS e ON e.id_kriteria = d.id_kriteria " . $qry_custom);
+				$sql->execute();
+				
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+
+		function insertdetBaku($id_lamaran,$id_nilai_krit,$totalNilai){
+
+			date_default_timezone_set("Asia/Bangkok");
+			$date = date("Y-m-d");
+			try{
+				$sql = $this->bukaKoneksi()->prepare("INSERT INTO tbl_nilai_detail (id_nilai_kri,tgl_penilaian,id_admin,id_lamaran,totalNilai,status,approved) values ('$id_nilai_krit','$date','1','$id_lamaran','$totalNilai','Diperiksa','1') ");
+				$sql->execute();
+				
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
 		
 		function CekLamaran($id_user, $id_lowongan){
 			try{
@@ -603,6 +689,32 @@ class Laporan extends DB{
 				print $e->getMessage();
 			}
 		}
+
+		function hitungPelamar($id_lowongan,$qry_custom){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("SELECT SUM(a.totalNilai) AS total, b.id_lamaran, c.nama_lengkap,c.id_user FROM tbl_nilai_detail AS a
+														JOIN pelamar AS b ON a.id_lamaran = b.id_lamaran
+														JOIN users AS c ON b.id_user = c.id_user
+														where b.id_lowongan = '$id_lowongan'
+														ORDER BY total DESC");
+				$sql->execute();
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+
+		function hitungPelamardet($id){
+			try{
+				$sql = $this->bukaKoneksi()->prepare("SELECT SUM(totalNilai) AS total, id_nilai_kri, id_lamaran FROM tbl_nilai_detail 
+														WHERE id_lamaran = '$id'");
+				$sql->execute();
+				return $sql;
+			}catch (PDOException $e){
+				print $e->getMessage();
+			}
+		}
+
 
 		function NormalisasiBobot($id_lowongan){
 			try{
